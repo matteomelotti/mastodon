@@ -2,11 +2,11 @@
 
 class AccountModerationNotePolicy < ApplicationPolicy
   def create?
-    staff?
+    can?(:manage_reports)
   end
 
   def destroy?
-    admin? || owner?
+    owner? || (role.can?(:manage_reports) && role.overrides?(record.account.user.role))
   end
 
   private
